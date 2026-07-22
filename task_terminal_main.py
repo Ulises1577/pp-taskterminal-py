@@ -1,8 +1,10 @@
-from create_task import crearTarea
+from CRUD_task import CRUD
 #Creamos base de datos en array
 tareasBD = []
- 
-while True: 
+crud = CRUD()
+
+while True:
+    print("\n") 
     print("Bienvenido a TaskTUI")
     print("¿Qué deseas hacer? ")
     print("1- Crear tarea. ")
@@ -18,7 +20,7 @@ while True:
 
     if choice == 1:
 
-        id_tarea = input("- Ingrese el ID de la tarea: ")
+        id_tarea = int(input("- Ingrese el ID de la tarea: "))
         texto = input("- Ingrese el título de la tarea: ")
         estado = False
         print("- Ingrese la prioridad según este rango de números: ")
@@ -27,16 +29,18 @@ while True:
 
         #todoMinusculas(texto)
         #quitarEspacio(texto, id_tarea)
-        nueva_Tarea = crearTarea(id_tarea, texto, estado, prioridad)
+        nueva_Tarea = crud.crearTarea(id_tarea, texto, estado, prioridad)
         tareasBD.append(nueva_Tarea)
     elif choice == 2: 
-        print("Prubeq")
+        #un metodo para ordenar segun prioridad
+        crud.mostrarTodas(tareasBD)
+        print("Estas son todas las tareas")
+
     #mostrarTodos()
         pass
     elif choice == 3: 
-        print("Elige el ID de la tarea: ")
-    #eliminarTarea(id_tarea)
-        pass
+        id_delete = int(input("Elige el ID de la tarea: "))
+        crud.eliminarTarea(tareasBD, id_delete)
     else: 
         print("ERROR. Elige entre las opcionces dadas")
         #Hacer para que las opciones se repitan
