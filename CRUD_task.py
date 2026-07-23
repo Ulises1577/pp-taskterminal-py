@@ -18,6 +18,13 @@ class CRUD:
         print("ERROR. Tarea no encontrada. ")
         return False
 
+    def ordenarPrioridad(self, tareasBD):
+        n = len(tareasBD)
+        for i in range(n):
+            for j in range(0, n - i -1):
+                if tareasBD[j].prioridad < tareasBD[j + 1].prioridad:
+                    tareasBD[j], tareasBD[j + 1] = tareasBD[j + 1], tareasBD[j]
+
     def mostrarTodas(self, tareasBD):
         for k in tareasBD:
             print( f" Nombre: {k.texto} | Id: {k.id_tarea} | Estado: {k.estado} | Prioridad: {k.prioridad}")
