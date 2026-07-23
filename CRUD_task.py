@@ -1,12 +1,26 @@
+from datetime import datetime
+
 class CRUD: 
-    def __init__(self, id_tarea =  None, texto = None, estado = None, prioridad = None):
-        self.id_tarea = id_tarea
+    def __init__(self, fecha_creacion =  None, texto = None, estado = False, prioridad = None):
+        self.fecha_creacion = fecha_creacion
         self.texto = texto
         self.estado = estado
         self.prioridad = prioridad
 
-    def crearTarea (self, id_tarea, texto, estado, prioridad):
-        return CRUD(id_tarea, texto, estado, prioridad)
+    def crearTarea (self, texto, prioridad):
+        fecha_c = datetime.now().strftime("%Y-%m-%D %H%M")
+        estado_inicial = False #Nace como pendiente
+        return CRUD(fecha_c, texto, estado_inicial, prioridad)
+
+    def completarTarea(self, tareasBD, nombre_buscar):
+        nombre_limpio = nombre_buscar.strip().lower()
+        for tarea in tareasBD:
+            if tarea.texto.strip().lower() == nombre_limpio:
+                tarea.estado = True 
+                print(f" Tarea '{tarea.texto}' fue marcada como COMPLETADA")
+                return True
+        print(" [AVISO]: No se encontró ninguna tarea con ese nombre.")
+        return False
 
     def eliminarPorNombre(self, tareasBD, nombres_buscar):
         nombre_limpio = nombres_buscar.strip().lower()
@@ -15,7 +29,7 @@ class CRUD:
                 tareasBD.remove(j)
                 print("Tarea eliminada")
                 return True
-
+            
         print("ERROR. Tarea no encontrada. ")
         return False
 
@@ -27,13 +41,17 @@ class CRUD:
                     tareasBD[j], tareasBD[j + 1] = tareasBD[j + 1], tareasBD[j]
 
     def mostrarTodas(self, tareasBD):
+        if not tareasBD:
+            print("\n No hay tareas registradas.")
+
         for k in tareasBD:
-            print( f" Nombre: {k.texto} | Id: {k.id_tarea} | Estado: {k.estado} | Prioridad: {k.prioridad}")
+            simbolo_estado = "[X] Completado" if k.estado else "[ ] Pendiente"
+            print( f" Tarea: {k.texto} | Fecha de Creacion: {k.fecha_creacion} | Estado: {simbolo_estado} | Prioridad: {k.prioridad}")
 
     def guardarEnTXT(self, tareasBD):
         with open("tareas.txt", "w", encoding="utf-8") as file:
             for t in tareasBD:
-                file.write(f"{t.id_tarea} | {t.texto} | {t.estado} | {t.prioridad} \n")
+                file.write(f"{t.fecha_creacion}|{t.texto}|{t.estado}|{t.prioridad}\n")
 
     def cargarTXT(self):
         tareas_cargadas = []
@@ -42,10 +60,12 @@ class CRUD:
                 for linea in file:
                     datos = linea.strip().split("|")
                     if len(datos) == 4:
-                        id_t, texto, estado, prioridad = datos
-                        nueva = CRUD(id_t, texto, estado == "False", int(prioridad))
+                        fecha_c, texto, estado_str, prioridad = datos
+                        es_completada = True if estado_str == "True" else False
+
+                        nueva = CRUD(fecha_c, texto, es_completada, int(prioridad))
                         tareas_cargadas.append(nueva)
+
         except FileNotFoundError:
             pass
         return tareas_cargadas
-2            

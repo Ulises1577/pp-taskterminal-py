@@ -1,23 +1,24 @@
 from CRUD_task import CRUD
-from datetime import datetime
-#Creamos base de datos en array
-
 
 crud = CRUD()
+
 tareasBD = crud.cargarTXT()
+
 while True:
-    print("\n") 
-    print("Bienvenido a TaskTUI")
-    print("¿Qué deseas hacer? ")
-    print("1- Crear tarea. ")
-    print("2- Ver todas las tareas. ")
-    print("3- Eliminar tarea (Nombre). ")
-    print("0- Para cerrar el programa.")
+    print("\n" + "="*35) 
+    print("        TaskTUI - Menú")
+    print("="*35)
+    print("1- Crear tarea.")
+    print("2- Ver todas las tareas.")
+    print("3- Marcar tarea como COMPLETADA.")
+    print("4- Eliminar tarea (por nombre).")
+    print("0- Salir.")
+    print("="*35)
 
     try: 
         choice = int(input("Ingrese un valor: "))
     except ValueError: 
-        print("\n Porfavor, ingrese el mismo caracter pedido. ")
+        print("\n Porfavor, ingrese solo el número de la opción.")
         continue
 
     if choice == 0:
@@ -25,18 +26,17 @@ while True:
         break
 
     elif choice == 1: 
-            id_tarea = datetime.now().strftime("%Y%m%D%H%M%S")
             texto = input("- Ingrese el título de la tarea: ").strip().lower()
-            estado = False
-            print("- Ingrese la prioridad según este rango de números: ")
+
+            print("- Rango de prioridad: ")
             print("- 1 - 3: Baja \n - 4 - 6: Media \n - 7 - 9: Alta \n - 10: Muy Alta")
             try: 
-                 prioridad = int(input("- Ingrese la prioridad segun este rango de números: "))
+                 prioridad = int(input("- Ingrese la prioridad: "))
             except ValueError:
-                 print("\n Aviso, ingresa unicamente numeros. Creacion cancelada.")
+                 print("\n [AVISO]: Unicamente números enteros. Creación cancelada.")
                  continue
             
-            nueva_Tarea = crud.crearTarea(id_tarea, texto, estado, prioridad)
+            nueva_Tarea = crud.crearTarea(texto, prioridad)
             tareasBD.append(nueva_Tarea)
             crud.ordenarPrioridad(tareasBD)
             crud.guardarEnTXT(tareasBD)
@@ -44,15 +44,19 @@ while True:
             print("\n Tarea creada con éxito.")
                 
     elif choice == 2: 
-        #un metodo para ordenar segun prioridad
+        print("\n--- LISTA DE TAREAS ---")
         crud.mostrarTodas(tareasBD)
-        print("Estas son todas las tareas")
 
-    elif choice == 3: 
-        nombre_borrar = input("Elige el nombre de la tarea: ")
-        if crud.eliminarPorNombre(tareasBD, nombre_borrar):
-             crud.guardarEnTXT(tareasBD)
+    elif choice == 3:
+
+        nombre_buscar = input("Elige el nombre de la tarea a COMPLETAR: ")
+        crud.completarTarea(tareasBD, nombre_buscar)
+        crud.guardarEnTXT(tareasBD)
+    elif choice == 4:
+         nombre_borrar = input("Ingrese el nombre de la tarea a ELIMINAR: ")
+         crud.eliminarPorNombre(tareasBD, nombre_borrar)
+         crud.guardarEnTXT(tareasBD)
     else: 
-        print("ERROR. Elige entre las opcionces dadas")
+        print("\n [AVISO]: Opción no válida")
         #Hacer para que las opciones se repitan
 
