@@ -13,40 +13,75 @@ tareasBD = crud.cargarTXT()
 def mostrar_menu():
     console.clear()
 
-    console.print(Panel.fit(
-         "[bold cyan] TASK_TUI[/bold cyan] | [dim]Gestor de Tareas[/dim]",
-          border_style="cyan"
+    color_orange_main = "#ed7d05"
+    color_orange_dark = "#e64a1b"
+    color_orange_bright = "#ff9e3b"
+
+    #Este es el encabezado
+    console.print(Panel(
+         f"[bold {color_orange_bright}]TASK_TUI[/bold {color_orange_bright}]",
+          border_style=color_orange_dark,
+          expand=True
      ))
 
-    table = Table(title=" Tus Tareas Pendientes y Completadas", show_header=True, header_style="bold magenta")
-    table.add_column("Creada", style="dim", width=18)
-    table.add_column("Tarea", style="bold white", min_width=20)
-    table.add_column("Estado", justify="center", width=15)
-    table.add_column("Prioridad", justify="right", width=10)
+    #Tabla expandida
+    table = Table(
+        title=f"\n[bold {color_orange_main} Tus Tareas Pendientes y Completadas [/ bold {color_orange_main}]\n",
+        show_header=True,
+        header_style=f"bold {color_orange_bright}",
+        border_style=color_orange_bright,
+        expand=True
+    )
+
+    table = Table(
+        title=f"\n[not italic bold {color_orange_main}]Tus Tareas Pendientes y Completadas[/not italic bold {color_orange_main}]\n",
+        show_header=True,
+        header_style=f"bold {color_orange_main}",
+        border_style=color_orange_dark,
+        expand=True
+    )
+
+
+
+
+    
+    table.add_column("Creada", style="dim white", min_width=10, justify="center")
+    table.add_column("Tarea", style="bold white", ratio=3)
+    table.add_column("Estado", justify="center", min_width=10)
+    table.add_column("Prioridad", justify="center", min_width=8)
 
     if not tareasBD:
-          table.add_row("-", "[italic dim]No hay tareas registradas[/italic dim]", "-", "-")
+          table.add_row("-", "[not italic bold]No hay tareas registradas[/not italic bold]", "-", "-")
     else:
           for t in tareasBD:
                if t.estado:
                     estado_fmt = "[bold green] Completada [/bold green]"
                     texto_fmt = f"[strike dim]{t.texto}[/strike dim]"
                else: 
-                    estado_fmt = "[bold yellow] Pendiente [/bold yellow]"
-                    texto_fmt = t.texto
+                    estado_fmt = f"[bold {color_orange_bright}] Pendiente [/bold {color_orange_bright}]"
+                    texto_fmt = f"[bold white]{t.texto}[/bold white]"
 
-               prio_color = "red" if t.prioridad >= 7 else ("yellow" if t.prioridad >= 4 else "blue")
-               prio_fmt = f"[{prio_color}]{t.prioridad}[/{prio_color}]"
+               if t.prioridad >= 7:
+                prio_fmt = f"[bold #ff5555] {t.prioridad}[/bold #ff5555]" # Rojardo
+               elif t.prioridad >= 4:
+                prio_fmt = f"[bold {color_orange_bright}]⚡ {t.prioridad}[/bold {color_orange_bright}]" # Naranja para media
+               else:
+                prio_fmt = f"[{color_orange_dark}] {t.prioridad}[/{color_orange_dark}]" 
 
                table.add_row(t.fecha_creacion, texto_fmt, estado_fmt, prio_fmt)
 
     console.print(table)
     console.print()
 
-    console.print("[bold cyan][1][/bold cyan]  Crear tarea")
-    console.print("[bold cyan][2][/bold cyan]  Marcar completada")
-    console.print("[bold cyan][3][/bold cyan]  Eliminar tarea")
-    console.print("[bold cyan][0][/bold cyan]  Salir\n")
+    menu_content = (
+        f"[{color_orange_bright}][1][/{color_orange_bright}]  Crear tarea   "
+        f"[{color_orange_bright}][2][/{color_orange_bright}]  Marcar completada   "
+        f"[{color_orange_bright}][3][/{color_orange_bright}]  Eliminar tarea   "
+        f"[bold red][0][/bold red]  Salir"
+    )
+
+    console.print(Panel(menu_content, border_style=color_orange_dark, expand=True))
+    console.print()
 
 while True:
     mostrar_menu()
