@@ -8,9 +8,10 @@ class CRUD:
     def crearTarea (self, id_tarea, texto, estado, prioridad):
         return CRUD(id_tarea, texto, estado, prioridad)
 
-    def eliminarTarea(self, tareasBD, id_delete):
+    def eliminarPorNombre(self, tareasBD, nombres_buscar):
+        nombre_limpio = nombres_buscar.strip().lower()
         for j in tareasBD:
-            if j.id_tarea == id_delete:
+            if j.texto.strip().lower() == nombre_limpio:
                 tareasBD.remove(j)
                 print("Tarea eliminada")
                 return True
@@ -28,4 +29,23 @@ class CRUD:
     def mostrarTodas(self, tareasBD):
         for k in tareasBD:
             print( f" Nombre: {k.texto} | Id: {k.id_tarea} | Estado: {k.estado} | Prioridad: {k.prioridad}")
-            
+
+    def guardarEnTXT(self, tareasBD):
+        with open("tareas.txt", "w", encoding="utf-8") as file:
+            for t in tareasBD:
+                file.write(f"{t.id_tarea} | {t.texto} | {t.estado} | {t.prioridad} \n")
+
+    def cargarTXT(self):
+        tareas_cargadas = []
+        try: 
+            with open("tareas.txt", "r", encoding="utf-8") as file:
+                for linea in file:
+                    datos = linea.strip().split("|")
+                    if len(datos) == 4:
+                        id_t, texto, estado, prioridad = datos
+                        nueva = CRUD(id_t, texto, estado == "False", int(prioridad))
+                        tareas_cargadas.append(nueva)
+        except FileNotFoundError:
+            pass
+        return tareas_cargadas
+2            
