@@ -64,7 +64,7 @@ def mostrar_menu():
                if t.prioridad >= 7:
                 prio_fmt = f"[bold #ff5555] {t.prioridad}[/bold #ff5555]" # Rojardo
                elif t.prioridad >= 4:
-                prio_fmt = f"[bold {color_orange_bright}]⚡ {t.prioridad}[/bold {color_orange_bright}]" # Naranja para media
+                prio_fmt = f"[bold {color_orange_bright}] {t.prioridad}[/bold {color_orange_bright}]" # Naranja para media
                else:
                 prio_fmt = f"[{color_orange_dark}] {t.prioridad}[/{color_orange_dark}]" 
 
@@ -83,6 +83,7 @@ def mostrar_menu():
     console.print(Panel(menu_content, border_style=color_orange_dark, expand=True))
     console.print()
 
+Prompt.illegal_choice_message="[bold red] Opción no válida. [/bold red]"
 while True:
     mostrar_menu()
     choice = Prompt.ask("[bold white] Selecciona una opción [/bold white]", choices=["1","2","3","0"], default="0")
