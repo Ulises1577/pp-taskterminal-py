@@ -8,7 +8,7 @@ class CRUD:
         self.prioridad = prioridad
 
     def crearTarea (self, texto, prioridad):
-        fecha_c = datetime.now().strftime("%Y-%m-%D %H:%M")
+        fecha_c = datetime.now().strftime("%Y-%m-%d %H:%M")
         estado_inicial = False #Nace como pendiente
         return CRUD(fecha_c, texto, estado_inicial, prioridad)
 
