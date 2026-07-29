@@ -48,6 +48,22 @@ class CRUD:
             simbolo_estado = "[X] Completado" if k.estado else "[ ] Pendiente"
             print( f" Tarea: {k.texto} | Fecha de Creacion: {k.fecha_creacion} | Estado: {simbolo_estado} | Prioridad: {k.prioridad}")
 
+    def eliminarCompletadas(self, tareasBD):
+        total_inicial = len(tareasBD)
+        #esto es para comparar luego
+
+        #El [:] es para usar la misma tareasBD y no que se cree otra por estar dentro de una funcion
+        tareasBD[:] = [j for j in tareasBD if not j.estado]
+        # y ahora se guardan unicamente en el mismo arreglo las que esten en False
+
+        if len(tareasBD) < total_inicial:
+            print("Todas las tareas completadas fueron eliminadas. ")
+            return True
+        else:
+            print("ERROR. Aun no hay ninguna tarea completada.")
+            return False
+
+
     def guardarEnTXT(self, tareasBD):
         with open("tareas.txt", "w", encoding="utf-8") as file:
             for t in tareasBD:

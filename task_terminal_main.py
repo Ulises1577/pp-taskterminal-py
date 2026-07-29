@@ -77,6 +77,7 @@ def mostrar_menu():
         f"[{color_orange_bright}][1][/{color_orange_bright}]  Crear tarea   "
         f"[{color_orange_bright}][2][/{color_orange_bright}]  Marcar completada   "
         f"[{color_orange_bright}][3][/{color_orange_bright}]  Eliminar tarea   "
+        f"[{color_orange_bright}][4][/{color_orange_bright}]  Eliminar completadas "
         f"[bold red][0][/bold red]  Salir"
     )
 
@@ -86,7 +87,7 @@ def mostrar_menu():
 Prompt.illegal_choice_message="[bold red] Opción no válida. [/bold red]"
 while True:
     mostrar_menu()
-    choice = Prompt.ask("[bold white] Selecciona una opción [/bold white]", choices=["1","2","3","0"], default="0")
+    choice = Prompt.ask("[bold white] Selecciona una opción [/bold white]", choices=["1","2","3","4","0"], default="0")
 
     if choice == "0":
         break
@@ -114,6 +115,11 @@ while True:
     elif choice == "3":
         nombre = Prompt.ask("\n  [bold]Nombre de la tarea a ELIMINAR[/bold]").strip().lower()
         if crud.eliminarPorNombre(tareasBD, nombre):
+            crud.guardarEnTXT(tareasBD)
+            Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
+
+    elif choice == "4":
+        if crud.eliminarCompletadas(tareasBD):
             crud.guardarEnTXT(tareasBD)
             Prompt.ask("\n[dim]Presiona ENTER para continuar...[/dim]")
 
